@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <title>IA Rafin | Tech Visionary</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co.com/Wpg1n8Rr/iar-logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio of IA Rafin - Founder, Developer, and Visionary building the future.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              dark: '#020617', 
+              primary: '#10b981', 
+              secondary: '#34d399', 
+              accent: '#84cc16', 
+            }
+          },
+          animation: {
+            'blob': 'blob 10s infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'scan': 'scan 8s linear infinite',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            scan: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(100vh)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #020617;
+      color: #e2e8f0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    /* Tech Grid Background */
+    .tech-bg {
+        background-size: 50px 50px;
+        background-image: 
+            linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    }
+
+    /* Scanline Effect */
+    .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.2), transparent);
+        z-index: -1;
+        opacity: 0.5;
+        animation: scan 8s linear infinite;
+        pointer-events: none;
+    }
+
+    /* Particle Canvas */
+    #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2; 
+        pointer-events: none; /* Let clicks pass through */
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; border: 1px solid #334155; }
+    ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+    /* Nav Glass */
+    .nav-island {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #34d399 0%, #a3e635 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-border-card {
+      position: relative;
+      background: #0f172a;
+      z-index: 1;
+    }
+    .gradient-border-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: -1;
+      border-radius: inherit;
+      background: linear-gradient(45deg, #10b9811a, #ffffff1a);
+      transition: background 0.3s;
+    }
+    .gradient-border-card:hover::before {
+      background: linear-gradient(45deg, #10b981, #84cc16);
+    }
+
+    .tech-icon:hover { transform: translateY(-5px); color: #34d399; }
+    .tech-icon:hover svg { filter: drop-shadow(0 0 8px rgba(52, 211, 153, 0.5)); }
+  </style>
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-white">
+
+<div class="fixed inset-0 z-[-3] bg-[#020617]"></div> <div class="fixed inset-0 z-[-2] tech-bg opacity-30"></div> <canvas id="canvas-container"></canvas> <div class="scanline"></div> <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+  <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-500/5 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+  <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-lime-500/5 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+  <div class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-teal-500/5 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
+</div>
+
+<div class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+  <nav class="nav-island rounded-full px-6 py-3 w-full max-w-5xl flex justify-between items-center transition-all duration-300" id="navbar">
+    
+<a href="" class="text-xl font-bold font-sans tracking-wider flex items-center gap-2 group">
+  <div class="relative w-10 h-10">
+    <img src="https://i.ibb.co.com/Wpg1n8Rr/iar-logo.png" alt="Profile" class="w-full h-full rounded-full object-cover border-2 border-emerald-500/50 group-hover:rotate-12 transition-transform">
+    <div class="absolute bottom-0 right-0 bg-emerald-500 rounded-full p-0.5 ring-2 ring-[#0f172a] animate-pulse"></div>
+  </div>
+  
+  <span class="font-mono uppercase tracking-[0.2em] text-lg font-semibold group-hover:text-emerald-400 transition-colors">
+    IFAT AHMED RAFIN 
+    <span class="text-xs text-gray-500 font-mono font-normal block tracking-normal normal-case"></span>
+  </span>
+</a>
+
+    <div class="hidden md:flex items-center space-x-1 bg-white/5 rounded-full px-2 py-1 border border-white/5">
+      <a href="#about" class="px-4 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">About</a>
+      <a href="#projects" class="px-4 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">Projects</a>
+      <a href="#vision" class="px-4 py-1.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-full transition-all">Vision</a>
+    </div>
+
+    <div class="hidden md:flex items-center gap-3">
+        <a href="https://github.com/rafin010" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+        </a>
+        <a href="#contact" class="px-5 py-2 bg-emerald-500/10 border border-emerald-500/50 hover:bg-emerald-500 text-emerald-400 hover:text-black text-sm font-bold rounded-full transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)]">
+            Let's Talk
+        </a>
+    </div>
+
+    <button id="menu-btn" class="md:hidden text-gray-300 focus:outline-none">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+      </svg>
+    </button>
+  </nav>
+</div>
+
+<div id="mobile-menu" class="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl hidden flex flex-col justify-center items-center space-y-8 transition-opacity duration-300">
+  <a href="#about" class="text-2xl font-display font-medium text-gray-300 hover:text-emerald-400" onclick="toggleMenu()">About</a>
+  <a href="#projects" class="text-2xl font-display font-medium text-gray-300 hover:text-emerald-400" onclick="toggleMenu()">Projects</a>
+  <a href="#vision" class="text-2xl font-display font-medium text-gray-300 hover:text-emerald-400" onclick="toggleMenu()">Vision</a>
+  <a href="#contact" class="text-2xl font-display font-bold text-emerald-400" onclick="toggleMenu()">Contact Me</a>
+  <button onclick="toggleMenu()" class="absolute top-8 right-8 text-gray-400">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+  </button>
+</div>
+
+<section class="min-h-screen flex items-center justify-center text-center px-6 pt-24 relative">
+  <div class="reveal max-w-4xl mx-auto z-10">
+    <div class="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-300 text-xs font-semibold tracking-wide uppercase font-mono animate-float">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            The Next Gen Innovator
+
+    </div>
+    
+    <h1 class="text-5xl md:text-7xl font-bold font-display mb-6 leading-tight">
+      Architecting the <br />
+      <span class="gradient-text">Sustainable Future</span>
+    </h1>
+    
+    <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+      Founder • Developer • Visionary.<br>
+      Merging <span class="text-emerald-400 font-mono text-sm bg-emerald-900/20 px-1 rounded">&lt;Eco-Systems /&gt;</span> with high-performance technology.
+    </p>
+    
+    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+      <a href="#projects" class="group relative px-8 py-3.5 bg-white text-black font-semibold rounded-full hover:scale-105 transition duration-300 overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+        <span class="relative z-10">Explore Work</span>
+        <div class="absolute inset-0 bg-emerald-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out"></div>
+      </a>
+      
+      <a href="https://github.com/rafin010" target="_blank" class="px-8 py-3.5 bg-[#1b2738]/80 backdrop-blur-sm border border-gray-600 rounded-full font-semibold text-white hover:bg-black hover:border-emerald-400 hover:text-emerald-400 transition duration-300 flex items-center gap-2 group shadow-lg">
+        <svg class="w-5 h-5 group-hover:animate-bounce" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+        GitHub Profile
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-24 px-6 relative z-10">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center reveal">
+    <div>
+      <h2 class="text-3xl md:text-4xl font-bold font-display mb-6">About <span class="text-emerald-400">IA Rafin</span></h2>
+      <p class="text-gray-400 leading-relaxed mb-6 text-lg">
+        I engineer digital ecosystems that are not just functional, but revolutionary. My focus is on creating technology that feels organic, fast, and infinitely scalable.
+      </p>
+      <p class="text-gray-400 leading-relaxed mb-8 border-l-2 border-emerald-500 pl-4">
+        Specializing in <span class="text-white font-mono text-sm bg-white/5 px-1">Green Tech</span>, <span class="text-white font-mono text-sm bg-white/5 px-1">Sports Analytics</span>, and <span class="text-white font-mono text-sm bg-white/5 px-1">Decentralized Systems</span>, I build platforms that bridge the gap between human potential and machine intelligence.
+      </p>
+      
+      <div class="flex gap-10 pt-6">
+        <div class="group cursor-default">
+          <h4 class="text-4xl font-bold text-white font-display group-hover:text-emerald-400 transition">05+</h4>
+          <span class="text-xs text-emerald-500/70 font-mono uppercase tracking-widest group-hover:text-white transition">Years Exp</span>
+        </div>
+        <div class="group cursor-default">
+          <h4 class="text-4xl font-bold text-white font-display group-hover:text-emerald-400 transition">15+</h4>
+          <span class="text-xs text-emerald-500/70 font-mono uppercase tracking-widest group-hover:text-white transition">Deployments</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative animate-float-delayed">
+      <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 to-lime-500 blur-2xl opacity-10 rounded-3xl"></div>
+      
+      <div class="bg-[#0b1120]/90 backdrop-blur-xl p-8 rounded-3xl border border-white/10 relative z-10 shadow-2xl">
+        <h3 class="text-xl font-semibold mb-6 flex items-center gap-2 font-mono text-white">
+          <span class="text-emerald-400">></span> Tech_Stack
+          <span class="animate-pulse text-emerald-400">_</span>
+        </h3>
+        
+        <div class="grid grid-cols-4 gap-4">
+            
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#E34F26]/50 hover:shadow-[0_0_20px_rgba(227,79,38,0.3)]" title="HTML5">
+                <svg class="w-8 h-8 text-[#E34F26] drop-shadow-lg transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.325 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/>
+                </svg>
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#E34F26] transition-colors">HTML</span>
+            </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#38B2AC]/50 hover:shadow-[0_0_20px_rgba(56,178,172,0.3)]" title="Tailwind CSS">
+                <svg class="w-8 h-8 text-[#38B2AC] drop-shadow-lg transition-transform group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.001,4.8c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 C13.666,10.618,15.027,12,18.001,12c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C16.337,6.182,14.976,4.8,12.001,4.8z M6.001,12c-3.2,0-5.2,1.6-6,4.8c1.2-1.6,2.6-2.2,4.2-1.8c0.913,0.228,1.565,0.89,2.288,1.624 c1.177,1.194,2.538,2.576,5.512,2.576c3.2,0,5.2-1.6,6-4.8c-1.2,1.6-2.6,2.2-4.2,1.8c-0.913-0.228-1.565-0.89-2.288-1.624 C10.337,13.382,8.976,12,6.001,12z"/>
+                </svg>
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#38B2AC] transition-colors">Tailwind</span>
+            </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#F7DF1E]/50 hover:shadow-[0_0_20px_rgba(247,223,30,0.3)]" title="JavaScript">
+                <img src="https://i.ibb.co.com/20xdLHhf/js-svgrepo-com.png" alt="JavaScript" class="w-8 h-8 drop-shadow-lg transition-transform group-hover:scale-110" />
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#F7DF1E] transition-colors">JS</span>
+            </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#3776AB]/50 hover:shadow-[0_0_20px_rgba(55,118,171,0.3)]" title="Python">
+                <img src="https://i.ibb.co.com/fYygLVsR/python-svgrepo-com.png" alt="Python" class="w-8 h-8 drop-shadow-lg transition-transform group-hover:scale-110" />
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#3776AB] transition-colors">Python</span>
+            </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/50 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]" title="Flask">
+                 <img src="https://i.ibb.co.com/h1djnxj8/flask-svgrepo-com.png" alt="Flask" class="w-8 h-8 drop-shadow-lg transition-transform group-hover:scale-110" />
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-white transition-colors">Flask</span>
+            </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#2BA977]/50 hover:shadow-[0_0_20px_rgba(43,169,119,0.3)]" title="Django">
+                <img src="https://i.ibb.co.com/bgnS3bRH/django-svgrepo-com.png" alt="Django" class="w-8 h-8 drop-shadow-lg transition-transform group-hover:scale-110" />
+               <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#2BA977] transition-colors">Django</span>
+           </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#4479A1]/50 hover:shadow-[0_0_20px_rgba(68,121,161,0.3)]" title="MySQL">
+                <img src="https://i.ibb.co.com/PZxr6NV1/mysql-logo-svgrepo-com.png" alt="MySQL" class="w-8 h-8 drop-shadow-lg transition-transform group-hover:scale-110" />
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#4479A1] transition-colors">MySQL</span>
+            </div>
+
+            <div class="group relative flex flex-col items-center justify-center aspect-square bg-white/5 border border-white/5 rounded-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#47A248]/50 hover:shadow-[0_0_20px_rgba(71,162,72,0.3)]" title="MongoDB">
+                <img src="https://i.ibb.co.com/mCnBM1Kf/mongo-svgrepo-com.png" alt="MongoDB" class="w-8 h-8 drop-shadow-lg transition-transform group-hover:scale-110" />
+                <span class="text-[10px] text-gray-400 font-mono mt-2 group-hover:text-[#47A248] transition-colors">MongoDB</span>
+            </div>
+            
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="py-24 px-6 z-10 relative">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Featured <span class="text-emerald-400">Innovations</span></h2>
+      <p class="text-gray-400 font-light">Pioneering projects defining the next era of tech.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      
+      <div class="reveal gradient-border-card p-0.5 rounded-2xl h-full">
+        <div class="bg-[#0B1120]/90 backdrop-blur p-8 rounded-[14px] h-full flex flex-col relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-lime-500/10 blur-[50px] rounded-full group-hover:bg-lime-500/20 transition"></div>
+          
+          <div class="w-12 h-12 bg-lime-900/30 rounded-lg flex items-center justify-center mb-6 text-lime-400 border border-lime-500/20 group-hover:scale-110 transition duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-2 text-white">SportyXi</h3>
+          <p class="text-xs text-lime-400 font-mono mb-4 uppercase tracking-widest">Sports Tech Ecosystem</p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+            A comprehensive AI-driven platform for athlete performance tracking, fan engagement, and real-time sports analytics.
+          </p>
+          
+          <div class="mt-auto pt-6 border-t border-gray-800 flex justify-between items-center">
+             <span class="text-xs text-gray-500 font-mono">BETA_V.0.9</span>
+             <a href="https://sportyxi.netlify.app/" target="_blank" class="text-lime-400 text-sm font-semibold hover:underline flex items-center gap-1 group-hover:gap-2 transition-all">
+               Visit Site <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+             </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal gradient-border-card p-0.5 rounded-2xl h-full delay-100">
+        <div class="bg-[#0B1120]/90 backdrop-blur p-8 rounded-[14px] h-full flex flex-col relative overflow-hidden group">
+           <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-[50px] rounded-full group-hover:bg-emerald-500/20 transition"></div>
+
+          <div class="w-12 h-12 bg-emerald-900/30 rounded-lg flex items-center justify-center mb-6 text-emerald-400 border border-emerald-500/20 group-hover:scale-110 transition duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.204 12.848a6 6 0 00-9.172-9.172M15 15h2a2 2 0 002-2 2 2 0 012-2h.01m-2.01 4a6 6 0 01-6-6"></path></svg>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-2 text-white">Lingo Link</h3>
+          <p class="text-xs text-emerald-400 font-mono mb-4 uppercase tracking-widest">AI Communication</p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+            Breaking global language barriers with neural-network powered real-time voice translation and context awareness.
+          </p>
+          
+          <div class="mt-auto pt-6 border-t border-gray-800 flex justify-between items-center">
+             <span class="text-xs text-gray-500 font-mono">LIVE_V2.0</span>
+             <a href="https://lingolink.io" target="_blank" class="text-emerald-400 text-sm font-semibold hover:underline flex items-center gap-1 group-hover:gap-2 transition-all">
+               Visit Site <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+             </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal gradient-border-card p-0.5 rounded-2xl h-full delay-200">
+        <div class="bg-[#0B1120]/90 backdrop-blur p-8 rounded-[14px] h-full flex flex-col relative overflow-hidden group">
+           <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/10 blur-[50px] rounded-full group-hover:bg-teal-500/20 transition"></div>
+
+          <div class="w-12 h-12 bg-teal-900/30 rounded-lg flex items-center justify-center mb-6 text-teal-400 border border-teal-500/20 group-hover:scale-110 transition duration-300">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+          </div>
+          
+          <h3 class="text-xl font-bold mb-2 text-white">AirFi</h3>
+          <p class="text-xs text-teal-400 font-mono mb-4 uppercase tracking-widest">Connectivity Infrastructure</p>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6 flex-grow">
+            Decentralized mesh-network providing low-latency internet access to remote global regions via satellite bridging.
+          </p>
+          
+          <div class="mt-auto pt-6 border-t border-gray-800 flex justify-between items-center">
+             <span class="text-xs text-gray-500 font-mono">DEPLOYING...</span>
+             <a href="https://airfi.net" target="_blank" class="text-teal-400 text-sm font-semibold hover:underline flex items-center gap-1 group-hover:gap-2 transition-all">
+               Visit Site <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+             </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="vision" class="relative py-32 px-6 overflow-hidden bg-[#020617]">
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+  
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-indigo-500/20 opacity-30 blur-[100px] rounded-full pointer-events-none"></div>
+  <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 opacity-20 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <div class="max-w-5xl mx-auto text-center relative z-10">
+    
+    <div class="mb-8 flex justify-center reveal">
+      <div class="relative group">
+        <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-indigo-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+        <div class="relative px-4 py-1.5 bg-slate-900/50 backdrop-blur-xl ring-1 ring-white/10 rounded-full flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-xs font-mono font-medium text-emerald-300 tracking-[0.2em] uppercase">Mission Control</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-4xl md:text-6xl lg:text-7xl font-bold font-display mb-10 leading-tight text-white tracking-tight">
+      Building a 
+      <span class="relative inline-block">
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-200 to-indigo-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">
+          trillion-dollar
+        </span>
+        <svg class="absolute w-full h-3 -bottom-1 left-0 text-emerald-500/30" viewBox="0 0 100 10" preserveAspectRatio="none">
+           <path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="2" fill="none" />
+        </svg>
+      </span>
+      <br class="hidden md:block" />
+      ecosystem regarding future.
+    </h2>
+
+    <p class="max-w-2xl mx-auto text-lg md:text-xl text-slate-400 leading-relaxed font-light mb-12">
+      Where technology amplifies human capability, not replaces it. We are architecting the infrastructure for the next century of digital evolution.
+    </p>
+
+    <div class="flex items-center justify-center gap-4 opacity-50">
+        <div class="h-[1px] w-12 bg-gradient-to-r from-transparent to-emerald-500/50"></div>
+        <div class="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></div>
+        <div class="h-[1px] w-12 bg-gradient-to-l from-transparent to-emerald-500/50"></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="py-16 px-5 relative z-10 overflow-hidden">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <div class="max-w-4xl mx-auto text-center reveal relative">
+    
+    <div class="group relative bg-gray-900/60 backdrop-blur-xl border border-white/10 p-12 md:p-16 rounded-[2.5rem] shadow-2xl overflow-hidden transition-all duration-500 hover:border-emerald-500/30 hover:shadow-[0_0_60px_rgba(16,185,129,0.15)]">
+      
+      <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent"></div>
+      <div class="absolute -top-[1px] left-0 w-24 h-[2px] bg-emerald-400 blur-[2px] animate-shimmer"></div>
+
+      <div class="relative z-20 flex flex-col items-center">
+        
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-8">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span class="text-emerald-400 text-xs font-bold tracking-widest uppercase">Open for Opportunities</span>
+        </div>
+
+        <h2 class="text-3xl md:text-5xl font-bold mb-6 font-display text-white tracking-tight">
+          Let’s Build Something <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Extraordinary</span>
+        </h2>
+
+        <p class="text-gray-400 mb-10 max-w-xl mx-auto text-lg leading-relaxed">
+          Ready to turn vision into reality? Whether it's a strategic partnership or a new venture, I'm currently accepting select projects.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-5 w-full justify-center">
+          
+          <a href="mailto:iarafin010@gmail.com"
+             class="group/btn relative px-8 py-4 bg-white text-gray-900 rounded-full font-bold text-lg overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
+            <span class="relative z-10 flex items-center justify-center gap-2">
+              Email Me
+              <svg class="w-5 h-5 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </span>
+            <div class="absolute inset-0 bg-gradient-to-r from-emerald-200 via-white to-emerald-200 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+          </a>
+
+          <a href="https://www.linkedin.com/in/ifat-ahmed-rafin-056741360/" target="_blank" 
+             class="px-8 py-4 border border-white/10 bg-white/5 text-white rounded-full font-semibold text-lg hover:bg-white/10 hover:border-emerald-500/50 hover:text-emerald-400 transition-all hover:scale-105 active:scale-95 backdrop-blur-md flex items-center justify-center gap-2">
+             <span>LinkedIn Profile</span>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes shimmer {
+    0% { left: 0; opacity: 0; }
+    50% { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  .animate-shimmer {
+    animation: shimmer 4s infinite linear;
+  }
+</style>
+
+<footer class="py-8 border-t border-gray-800 bg-[#020617] relative z-10">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+    <p class="text-gray-600 text-sm font-mono">© 2026 IA Rafin. System All Green.</p>
+    <div class="flex space-x-6 text-gray-500">
+      <a href="https://github.com/rafin010" target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1">
+         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+         GitHub
+      </a>
+      <a href="https://twitter.com/ia_rafin" target="_blank" class="hover:text-emerald-400 transition">Twitter</a>
+      <a href="https://www.instagram.com/ia_rafin/" target="_blank" class="hover:text-emerald-400 transition">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile Menu Logic
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+    if(!menu.classList.contains('hidden')){
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+  });
+
+  function toggleMenu() {
+    menu.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  // Scroll Animation Logic
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // --- TECH PARTICLE SYSTEM ---
+  const canvas = document.getElementById("canvas-container");
+  const ctx = canvas.getContext("2d");
+
+  let width, height;
+  let particles = [];
+
+  function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+  }
+
+  class Particle {
+      constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.5; // Slow movement
+          this.vy = (Math.random() - 0.5) * 0.5;
+          this.size = Math.random() * 2 + 1;
+      }
+      update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+      }
+      draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(16, 185, 129, 0.5)"; // Emerald color
+          ctx.fill();
+      }
+  }
+
+  function initParticles() {
+      particles = [];
+      const numParticles = Math.min(window.innerWidth / 10, 100); // Responsive count
+      for (let i = 0; i < numParticles; i++) {
+          particles.push(new Particle());
+      }
+  }
+
+  function animateParticles() {
+      ctx.clearRect(0, 0, width, height);
+      
+      particles.forEach((p, index) => {
+          p.update();
+          p.draw();
+          
+          // Connect particles close to each other
+          for (let j = index + 1; j < particles.length; j++) {
+              const p2 = particles[j];
+              const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+              if (dist < 100) {
+                  ctx.beginPath();
+                  ctx.strokeStyle = `rgba(16, 185, 129, ${0.1 - dist/1000})`;
+                  ctx.lineWidth = 0.5;
+                  ctx.moveTo(p.x, p.y);
+                  ctx.lineTo(p2.x, p2.y);
+                  ctx.stroke();
+              }
+          }
+      });
+      requestAnimationFrame(animateParticles);
+  }
+
+  window.addEventListener('resize', () => {
+      resize();
+      initParticles();
+  });
+
+  resize();
+  initParticles();
+  animateParticles();
+</script>
+
+</body>
+</html>
