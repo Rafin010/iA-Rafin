@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA Rafin | Loading Future...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: { dark: '#020617' }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; color: #e2e8f0; }
+        .grid-bg {
+            background-image: linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+        .tilt-card { transition: transform 0.1s ease; }
+    </style>
+</head>
+<body class="h-screen w-full flex flex-col items-center justify-center relative overflow-hidden selection:bg-emerald-500 selection:text-white">
+
+    <!-- Background Elements -->
+    <div class="absolute inset-0 grid-bg z-0 pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 1.5s;"></div>
+
+    <!-- Main Content -->
+    <main class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        
+        <!-- Status Badge -->
+        <div class="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-xs font-mono tracking-[0.2em] uppercase backdrop-blur-md">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            Resomed Loading Future
+        </div>
+
+        <!-- Hero Text -->
+        <h1 class="text-5xl md:text-8xl font-bold font-display mb-8 tracking-tight leading-tight">
+            Something <br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-200 to-emerald-400 animate-gradient-x">Extraordinary</span>
+        </h1>
+
+        <p class="text-gray-400 text-lg md:text-xl mb-12 font-light max-w-xl mx-auto leading-relaxed">
+            We are re-architecting the digital experience. <br>
+            Prepare for the next evolution of <span class="text-emerald-400 font-mono">IA Rafin</span>.
+        </p>
+
+        <!-- Countdown Timer -->
+        <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-16 font-mono text-emerald-400">
+            <div class="tilt-card flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg hover:border-emerald-500/50 transition-colors">
+                <span class="text-3xl md:text-4xl font-bold" id="days">00</span>
+                <span class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Days</span>
+            </div>
+            <div class="tilt-card flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg hover:border-emerald-500/50 transition-colors">
+                <span class="text-3xl md:text-4xl font-bold" id="hours">00</span>
+                <span class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Hours</span>
+            </div>
+            <div class="tilt-card flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg hover:border-emerald-500/50 transition-colors">
+                <span class="text-3xl md:text-4xl font-bold" id="minutes">00</span>
+                <span class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Mins</span>
+            </div>
+            <div class="tilt-card flex flex-col items-center justify-center w-20 h-24 md:w-24 md:h-28 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg hover:border-emerald-500/50 transition-colors">
+                <span class="text-3xl md:text-4xl font-bold" id="seconds">00</span>
+                <span class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Secs</span>
+            </div>
+        </div>
+
+        <!-- Notify Button -->
+        <div class="relative group inline-block">
+            <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-200"></div>
+            <button onclick="alert('You have been added to the priority list!')" class="relative px-8 py-4 bg-slate-900 rounded-full leading-none flex items-center gap-3 border border-white/10 hover:bg-slate-800 transition-all">
+                <span class="text-gray-200 font-bold group-hover:text-white">Notify Me When Live</span>
+                <svg class="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="absolute bottom-6 w-full text-center">
+        <p class="text-gray-600 text-xs font-mono tracking-widest">© 2026 IA RAFIN • SYSTEM SECURE</p>
+    </footer>
+
+    <script>
+        // Countdown Logic
+        const launchDate = new Date();
+        launchDate.setDate(launchDate.getDate() + 14); // Set for 14 days from now
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 3D Tilt Effect for Cards
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg rotation
+                const rotateY = ((x - centerX) / centerX) * 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
